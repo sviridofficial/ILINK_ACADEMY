@@ -5,10 +5,12 @@ import left from './left.svg';
 import right from './right.svg';
 import plus from './plus.svg';
 import Modal from "../../Modal/Modal";
+import {connect} from "react-redux";
 
-const Reviews = () => {
+const Reviews = (props) => {
+
     let slider = React.createRef();
-    const [modalActive, setModalActive] = useState(true);
+    const [modalActive, setModalActive] = useState(false);
     let settings = {
         dots: true,
         infinite: true,
@@ -45,6 +47,20 @@ const Reviews = () => {
             }
         ]
     };
+    let allComments = props.comments.map(c => <div>
+        <div className='reviwContainer'>
+            <div className='containerHeader'>
+                <div className="x">
+                    <div className='userPhoto'/>
+                    <p className='userName'>{c.username}</p>
+                </div>
+                <p className='postAdded'>{c.date}</p>
+            </div>
+            <div className="comment">
+                <p>{c.comment}</p>
+            </div>
+        </div>
+    </div>);
     return (
         <div className='reviewBlock'>
             <div className='reviews'>
@@ -62,57 +78,7 @@ const Reviews = () => {
                 </div>
                 <div className='reviewConteiner'>
                     <Slider {...settings} ref={slider}>
-                        <div>
-                            <div className='reviwContainer'>
-                                <div className='containerHeader'>
-                                    <div className="x">
-                                        <div className='userPhoto'/>
-                                        <p className='userName'>Иван</p>
-                                    </div>
-                                    <p className='postAdded'>15.03.2022</p>
-                                </div>
-                                <div className="comment">
-                                    <p>Отличный коллектив, руководители понимают сам процесс работы каждого
-                                        сотрудника и
-                                        помогают всем без исключения. Система KPI позволяет реально хорошо
-                                        зарабатывать
-                                        по
-                                        простому принципу - чем больше и лучше ты работаешь, тем больше денег
-                                        получаешь.
-                                        Соцпакет - отличная страховка ДМС, организовали курсы английского языка
-                                        бесплатно,
-                                        оплачивают тренажерный зал. Зарплату выплачивают всегда вовремя.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <div className='reviwContainer'>
-                                <div className='containerHeader'>
-                                    <div className="x">
-                                        <div className='userPhoto'/>
-                                        <p className='userName'>Александр</p>
-                                    </div>
-                                    <p className='postAdded'>15.03.2022</p>
-                                </div>
-                                <div className="comment">
-                                    <p>Хорошая работа, Константин!</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <div className='reviwContainer'>
-                                <div className='containerHeader'>
-                                    <div className="x">
-                                        <div className='userPhoto'/>
-                                        <p className='userName'>Михаил</p>
-                                    </div>
-                                    <p className='postAdded'>20.03.2022</p>
-                                </div>
-                                <div className="comment">
-                                    <p>Отличный сайт!</p>
-                                </div>
-                            </div>
-                        </div>
+                        {allComments}
                     </Slider>
                 </div>
             </div>
@@ -122,7 +88,7 @@ const Reviews = () => {
                 }}/>
             </button>
             <button className="rightButton">
-                <img src={right}  onClick={() => {
+                <img src={right} onClick={() => {
                     slider.current.slickNext();
                 }}/>
             </button>
@@ -130,5 +96,8 @@ const Reviews = () => {
         </div>
     )
 }
+const mapStateToProps = (state) => ({
+    comments: state.commentReducer.comments
+})
 
-export default Reviews;
+export default connect(mapStateToProps, {})(Reviews)
