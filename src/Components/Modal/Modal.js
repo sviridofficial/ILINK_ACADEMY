@@ -6,33 +6,33 @@ import info from './Info Square.svg'
 import database from "../../FirebaseData/firebaseInit";
 import {addDoc, collection} from "firebase/firestore";
 import {Field, reduxForm} from "redux-form";
+import {connect} from "react-redux";
+import {addCommentFirebase, isSending} from "../../Redux/reducers/commentReducer";
+import Spinner from "../Spinner";
 
 
-const Modal = ({active, setActive}) => {
-    const writeUserData = async (formData) => {
-        const db = database;
-        let date = new Date();
-        const docRef = await addDoc(collection(db, "base"), {
-            date: date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear(),
-            name: formData.userName,
-            comment: formData.comment
-        });
-        alert(docRef.id)
+const Modal = (props) => {
+    const writeUserData = (formData) => {
+        props.addCommentFirebase(formData);
     }
+
     return (
-        <div className={active ? "modal active" : "modal"} onClick={() => {
-            setActive(false)
+        <div className={props.active ? "modal active" : "modal"} onClick={() => {
+            props.setActive(false)
         }}>
-            <div className={active ? "modal_content active" : "modal_content"} onClick={e => e.stopPropagation()}>
-                <div className="modal_header">
-                    <p className="modal_reviews">Отзыв</p>
-                    <img className='cancelImage' src={cancel} onClick={() => setActive(false)}/>
-                </div>
-                <p className="whatIsYourName">Как вас зовут?</p>
-                <ModalReduxForm onSubmit={writeUserData}/>
-            </div>
+            {!props.isSending ?
+                <div className={props.active ? "modal_content active" : "modal_content"}
+                     onClick={e => e.stopPropagation()}>
+                    <div className="modal_header">
+                        <p className="modal_reviews">Отзыв</p>
+                        <img className='cancelImage' src={cancel} onClick={() => props.setActive(false)}/>
+                    </div>
+                    <p className="whatIsYourName">Как вас зовут?</p>
+                    <ModalReduxForm onSubmit={writeUserData}/>
+                </div> : <Spinner/>}
         </div>
     )
+
 }
 
 const CommentForm = (props) => {
@@ -59,7 +59,12 @@ const CommentForm = (props) => {
         </form>
     )
 }
+
 const ModalReduxForm = reduxForm({
     form: "commentForm"
 })(CommentForm);
-export default Modal;
+
+const mapStateToProps = (state) => ({
+    isSending: state.commentReducer.isSending
+})
+export default connect(mapStateToProps, {addCommentFirebase})(Modal)

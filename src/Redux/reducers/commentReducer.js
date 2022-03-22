@@ -1,4 +1,5 @@
-import {collection, getDocs, getFirestore} from "firebase/firestore";
+import {addDoc, collection, getDocs, getFirestore} from "firebase/firestore";
+import database from "../../FirebaseData/firebaseInit";
 
 let initialState = {
     comments: [{
@@ -15,18 +16,30 @@ let initialState = {
             date: "15.05.2001",
             comment: "Хароууш!"
         }
-    ]
+    ],
+    isSending: false
 }
 const commentReducer = (state = initialState, action) => {
     switch (action.type) {
         case 'addComment':
             return {
-                ...state
+                ...state,
+                comments: [action.comment, ...state.comments]
             }
         case 'setAllComments':
             return {
                 ...state,
                 comments: [...action.comments]
+            }
+        case 'isSending':
+            return {
+                ...state,
+                isSending: true
+            }
+        case 'stopSending':
+            return {
+                ...state,
+                isSending: false
             }
         default:
             return state;
@@ -36,6 +49,22 @@ const commentReducer = (state = initialState, action) => {
 export const setAllComments = (comments) => ({
     type: 'setAllComments',
     comments: comments
+})
+
+export const isSending = () => ({
+    type: 'isSending'
+})
+
+export const stopSending = () => ({
+    type: 'stopSending'
+})
+export const addComment = (comment) => ({
+    type: 'addComment',
+    comment: {
+        username: comment.userName,
+        date: new Date().getDate() + "." + (new Date().getMonth() + 1) + "." + new Date().getFullYear(),
+        comment: comment.comment
+    }
 })
 export const getComments = () => async (dispatch) => {
     let list = [];
@@ -49,6 +78,18 @@ export const getComments = () => async (dispatch) => {
         })
     });
     dispatch(setAllComments(list));
+}
+export const addCommentFirebase = (formData) => async (dispatch) => {
+    dispatch(isSending())
+    const db = database;
+    let date = new Date();
+    const docRef = await addDoc(collection(db, "base"), {
+        username: formData.userName,
+        date: date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear(),
+        comment: formData.comment
+    });
+    dispatch(addComment(formData))
+    dispatch(stopSending());
 }
 
 
