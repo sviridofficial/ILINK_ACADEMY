@@ -1,3 +1,5 @@
+import {collection, getDocs, getFirestore} from "firebase/firestore";
+
 let initialState = {
     comments: [{
         username: "Константин",
@@ -21,8 +23,33 @@ const commentReducer = (state = initialState, action) => {
             return {
                 ...state
             }
+        case 'setAllComments':
+            return {
+                ...state,
+                comments: [...action.comments]
+            }
         default:
             return state;
     }
 }
+
+export const setAllComments = (comments) => ({
+    type: 'setAllComments',
+    comments: comments
+})
+export const getComments = () => async (dispatch) => {
+    let list = [];
+    const db = getFirestore()
+    const querySnapshot = await getDocs(collection(db, "base"));
+    querySnapshot.forEach((doc) => {
+        list.push({
+            username: doc.data().name,
+            date: doc.data().date,
+            comment: doc.data().comment
+        })
+    });
+    dispatch(setAllComments(list));
+}
+
+
 export default commentReducer;
