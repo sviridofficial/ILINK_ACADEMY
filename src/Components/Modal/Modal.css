@@ -26,7 +26,7 @@
     color: #333333;
     padding: 24px;
     background-color: white;
-    height: 443px;
+
     width: 676px;
     transform: scale(0.5);
     transition: 0.4s all;
@@ -190,11 +190,44 @@ textarea:focus {
     display: flex;
 }
 
+.file {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px;
+    margin-top: 12px;
+    background: #F5F5F5;
+    width: 268px;
+    height: 56px;
+}
+
+.straight {
+    width: 168px;
+    height: 4px;
+    background-color: #585CC6;
+    border-radius: 4px;
+}
+
+
+
+#deleteImage:hover path{
+    fill: #EB5757;
+    opacity: 1;
+}
+
+.fileOutput {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: start;
+}
+
 @media (max-width: 768px) {
     .modal_content {
         padding: 16px;
         width: 288px;
-        height: 463px;
+
     }
 
     .modal_reviews {
@@ -271,6 +304,12 @@ textarea:focus {
 
     .footerModal {
         margin-top: 22px;
+    }
+    .file{
+        width: 256px;
+    }
+    .straight{
+        width: 160px;
     }
 
 }
