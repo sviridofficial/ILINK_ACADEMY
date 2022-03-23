@@ -95,7 +95,6 @@ export const getComments = () => async (dispatch) => {
             comment: doc.data().comment
         })
     });
-    debugger
     dispatch(setAllComments(list));
 }
 export const addCommentFirebase = (formData) => async (dispatch) => {
