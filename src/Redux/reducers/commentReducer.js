@@ -1,5 +1,6 @@
 import {addDoc, collection, getDocs, getFirestore} from "firebase/firestore";
 import database from "../../FirebaseData/firebaseInit";
+import {type} from "@testing-library/user-event/dist/type";
 
 let initialState = {
     comments: [{
@@ -17,7 +18,8 @@ let initialState = {
             comment: "Хароууш!"
         }
     ],
-    isSending: false
+    isSending: false,
+    isSuccessSend: false
 }
 const commentReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -41,6 +43,16 @@ const commentReducer = (state = initialState, action) => {
                 ...state,
                 isSending: false
             }
+        case 'setFlashMessageSuccessSend':
+            return {
+                ...state,
+                isSuccessSend: true
+            }
+        case 'setFlashMessageEnd':
+            return {
+                ...state,
+                isSuccessSend: false
+            }
         default:
             return state;
     }
@@ -51,6 +63,12 @@ export const setAllComments = (comments) => ({
     comments: comments
 })
 
+export const setFlashMessageSuccessSend = () => ({
+    type: 'setFlashMessageSuccessSend'
+})
+export const setFlashMessageEnd = () => ({
+    type: 'setFlashMessageEnd'
+})
 export const isSending = () => ({
     type: 'isSending'
 })
@@ -72,11 +90,12 @@ export const getComments = () => async (dispatch) => {
     const querySnapshot = await getDocs(collection(db, "base"));
     querySnapshot.forEach((doc) => {
         list.push({
-            username: doc.data().name,
+            username: doc.data().username,
             date: doc.data().date,
             comment: doc.data().comment
         })
     });
+    debugger
     dispatch(setAllComments(list));
 }
 export const addCommentFirebase = (formData) => async (dispatch) => {
@@ -87,9 +106,10 @@ export const addCommentFirebase = (formData) => async (dispatch) => {
         username: formData.userName,
         date: date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear(),
         comment: formData.comment
-    });
+    })
     dispatch(addComment(formData))
     dispatch(stopSending());
+    dispatch(setFlashMessageSuccessSend());
 }
 
 

@@ -8,9 +8,9 @@ import {addCommentFirebase, isSending} from "../../Redux/reducers/commentReducer
 import Spinner from "../Spinner";
 import FileInput from "./FileInputCustom/FileInput";
 import jpgIcon from './jpgIcon.svg';
-import deleteIcon from './Delete.svg';
-import {requiredField, maxLength20} from "../../FormValidation/validators";
+import {requiredField, maxLength20, maxLength200} from "../../FormValidation/validators";
 import CustomInput from "./CustomInputField/СustomInput";
+import CustomTextarea from "./CustomInputField/CustomTextarea";
 
 
 const Modal = (props) => {
@@ -47,7 +47,8 @@ const CommentForm = (props) => {
     return (
         <form onSubmit={props.handleSubmit}>
             <div className="nameAndPhotoInputs">
-                <Field name={"userName"} component={CustomInput} placeholder={"Имя Фамилия"} validate={[requiredField, maxLength20]}/>
+                <Field name={"userName"} component={CustomInput} placeholder={"Имя Фамилия"}
+                       validate={[requiredField, maxLength20]}/>
                 <FileInput span={span} setSpan={setSpan}/>
             </div>
             {span ? <div className="file">
@@ -69,7 +70,8 @@ const CommentForm = (props) => {
 
 
             <p className="everythingLike">Все ли вам понравилось?</p>
-            <Field component={"textarea"} name="comment" placeholder={'Напишите пару слов о вашем опыте...'}></Field>
+            <Field component={CustomTextarea} name="comment"
+                   placeholder={'Напишите пару слов о вашем опыте...'} validate={[requiredField, maxLength200]}></Field>
             <div className='footerModal'>
                 <button className="sendButton">Отправить отзыв
                 </button>

@@ -15,7 +15,11 @@
 }
 
 .nameInput.error {
-    border-color: #EB5757;;
+    border-color: #EB5757;
+}
+
+textarea.error {
+    border-color: #EB5757;
 }
 
 .errorBlock {

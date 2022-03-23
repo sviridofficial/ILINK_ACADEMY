@@ -8,6 +8,8 @@ import "slick-carousel/slick/slick-theme.css";
 import {connect} from "react-redux";
 import {initializeApp} from "./Redux/reducers/appReducer";
 import Spinner from "./Components/Spinner";
+import FlashMessage from "./Components/FlashMessage/FlashMessage";
+import {setFlashMessageEnd, setFlashMessageSuccessSend} from "./Redux/reducers/commentReducer";
 
 function App(props) {
     useEffect(() => {
@@ -17,9 +19,11 @@ function App(props) {
     if (props.initialized.initialized) {
         return (
             <div>
+
                 <Header/>
                 <MainSection className='section'/>
                 <Footer/>
+                <FlashMessage successSended={props.isSuccessSend} endFlashMessage={props.setFlashMessageEnd}/>
             </div>
         );
     } else {
@@ -28,7 +32,8 @@ function App(props) {
 }
 
 const mapStateToProps = (state) => ({
-    initialized: state.appReducer
+    initialized: state.appReducer,
+    isSuccessSend: state.commentReducer.isSuccessSend
 })
-const AppContainer = connect(mapStateToProps, {initializeApp})(App);
+const AppContainer = connect(mapStateToProps, {initializeApp, setFlashMessageSuccessSend, setFlashMessageEnd})(App);
 export default AppContainer;

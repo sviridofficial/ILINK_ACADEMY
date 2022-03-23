@@ -8,7 +8,6 @@ import Modal from "../../Modal/Modal";
 import {connect} from "react-redux";
 
 const Reviews = (props) => {
-
     let slider = React.createRef();
     const [modalActive, setModalActive] = useState(false);
     let settings = {

@@ -130,7 +130,7 @@
 
     font-family: 'Gilroy-Bold';
     /* Main Text #333333 */
-
+    word-break:break-all;
     color: #333333;
 
 }
